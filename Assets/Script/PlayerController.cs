@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Elements")]
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator myAnim;
+    [SerializeField] public Animator myAnim;
     [Header("Settings")]
     [Tooltip("bu deðiþken oyuncunun hýzýný belirler")]
     [SerializeField] float speed;
@@ -22,7 +22,12 @@ public class PlayerController : MonoBehaviour
 
    public bool isDead;
 
-    [SerializeField] int score;
+    public bool isStart;
+
+    [SerializeField] public int score;
+
+    [SerializeField] public float floatScore;
+    [SerializeField] public float passedTime;
 
     // Enum tanýmlam
 
@@ -38,6 +43,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        passedTime += Time.deltaTime;
         moveCharacter();
 
     }
@@ -52,7 +58,21 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void moveCharacter()
     {
-        if (isDead)   return;
+
+        if (!isStart) return;
+         if (isDead)   return;
+
+        floatScore += Time.deltaTime;
+        if (floatScore>1)
+        {
+            score += 1;
+            floatScore = 0;
+        }
+        if (passedTime>10)
+        {
+            speed += 0.3f;
+            passedTime = 0;
+        }
 
         #region karakter sýnýrlama yöntemleri
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
