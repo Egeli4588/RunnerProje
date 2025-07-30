@@ -1197,6 +1197,7 @@ MonoBehaviour:
   score: 0
   floatScore: 0
   passedTime: 0
+  Health: 3
 --- !u!4 &1063139822 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3833715676058777156, guid: e792b5f59bf315845ab4fbb393f59b18, type: 3}

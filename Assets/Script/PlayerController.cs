@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public enum Positions
 {
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] bool isLeft, isMiddle, isRight;
 
-   public bool isDead;
+    public bool isDead;
 
     public bool isStart;
 
@@ -32,7 +33,16 @@ public class PlayerController : MonoBehaviour
     // Enum tanýmlam
 
     [System.NonSerialized] public Positions positions = Positions.onMiddle;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
+    //þimdi boollarý tanýmlayalým.
+
+    bool is2XActive, isShieldActive, isSpeedUpActive;
+    //saðlýk ekleyelim.
+    [SerializeField] int Health;
+
+
+    float beforeSpeed;
     void Start()
     {
         // transform.position = new Vector3(0, 0, 1);
@@ -60,15 +70,21 @@ public class PlayerController : MonoBehaviour
     {
 
         if (!isStart) return;
-         if (isDead)   return;
+        if (isDead) return;
+
+
+        if (is2XActive)
+        {
+            floatScore += Time.deltaTime;
+        }
 
         floatScore += Time.deltaTime;
-        if (floatScore>1)
+        if (floatScore > 1)
         {
             score += 1;
             floatScore = 0;
         }
-        if (passedTime>10)
+        if (passedTime > 10)
         {
             speed += 0.3f;
             passedTime = 0;
@@ -197,9 +213,108 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-         Debug.Log("çarpýþtýk");
+        Debug.Log("çarpýþtýk");
 
         if (other.gameObject.CompareTag("obstacle"))
+        {
+            int damage = other.gameObject.GetComponent<Obstacle>().damage;
+
+            if (isShieldActive)
+            {
+                Destroy(other.gameObject);
+                isShieldActive = false;
+            }
+            else
+            {
+                CheckHealth(damage, other.gameObject);
+            }
+
+        }
+    }
+
+    private void CheckHealth(int damage, GameObject other)
+    {
+        Health -= damage;
+        if (Health <= 0)
+        {
+            Debug.Log("çarpýþtýk");
+            myAnim.SetBool("Death", true);
+            isDead = true;
+        }
+        else
+        {
+            Destroy(other.gameObject);
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("collectable"))
+        {
+            Collectables collectables = other.GetComponent<Collectables>();
+            switch (collectables.collectablesEnum)
+            {
+                case CollectablesEnum.Coin:
+                    AddScrore(collectables.toBeAddedScore);
+                    break;
+
+                case CollectablesEnum.Shield:
+                    ActivateShield();
+                    break;
+                case CollectablesEnum.Health:
+                    AddHealth(collectables.TobeAddedHealth);
+                    break;
+                case CollectablesEnum.Score2X:
+                    ActivateBonus();
+                    break;
+                case CollectablesEnum.SpeedUp:
+                    AddSpeed(collectables.toBeAddedSpeed);
+                    break;
+
+            }
+
+            Destroy(other.gameObject);// coinlerin yok olmasý
+        }
+    }
+
+    private void AddSpeed(int toBeAddedSpeed)
+    {
+        beforeSpeed = speed;
+        speed += toBeAddedSpeed;
+        Invoke("BackToOrijinalSpeed", 5f);
+    }
+
+
+    void BackToOrijinalSpeed()
+    {
+
+        speed = beforeSpeed;
+    }
+    void AddScrore(int TobeAddedScore)
+    {
+        if (is2XActive)
+        {
+            TobeAddedScore *= 2;
+        }
+        score += TobeAddedScore;
+    }
+
+    void ActivateShield()
+    {
+        isShieldActive = true;
+        Invoke("DeactivateShiel", 5f);
+    }
+
+    void DeactivateShield()
+    {
+        isShieldActive = true;
+    }
+
+    void AddHealth(int ToBeAddedHealth)
+    {
+        Health += ToBeAddedHealth;
+        if (Health <= 0)
         {
             Debug.Log("çarpýþtýk");
             myAnim.SetBool("Death", true);
@@ -208,14 +323,15 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
+    void ActivateBonus()
     {
-        if (other.CompareTag("coin")) 
-        {
-            score += 10;
-            Destroy(other.gameObject);
-        }
+        isShieldActive = true;
+        Invoke("eActivateBonus", 5f);
     }
 
+    void DeActivateBonus()
+    {
+        isShieldActive = true;
+    }
 
 }
