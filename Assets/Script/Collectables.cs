@@ -7,4 +7,6 @@ public class Collectables : MonoBehaviour
     public int TobeAddedHealth;
     public int toBeAddedScore;
     public int toBeAddedSpeed;
+    public GameObject Player;
+
 }

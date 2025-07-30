@@ -691,6 +691,7 @@ MonoBehaviour:
   - {fileID: 2690590838766518064, guid: ab8211def515d2e4b8682adb177bab59, type: 3}
   - {fileID: 2690590838766518064, guid: 3b8907fd4465bd946bcb3656c674f0b0, type: 3}
   - {fileID: 2690590838766518064, guid: 1c4782b1b5d991d408f2ac6f1f83546d, type: 3}
+  collectables: []
   Player: {fileID: 1063139822}
   roadParent: {fileID: 209923840}
 --- !u!4 &554548960

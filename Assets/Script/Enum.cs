@@ -5,5 +5,6 @@ public enum CollectablesEnum
     Score2X,
     Health,
     SpeedUp,
+    Magnet,
     none
 }

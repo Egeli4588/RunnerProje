@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     //þimdi boollarý tanýmlayalým.
 
-    bool is2XActive, isShieldActive, isSpeedUpActive;
+    bool is2XActive, isShieldActive, isMagnetActive;
     //saðlýk ekleyelim.
     [SerializeField] int Health;
 
@@ -272,6 +272,11 @@ public class PlayerController : MonoBehaviour
                     AddSpeed(collectables.toBeAddedSpeed);
                     break;
 
+                case CollectablesEnum.Magnet:
+                    ActivateMagnet();
+                    
+                    break;
+
             }
 
             Destroy(other.gameObject);// coinlerin yok olmasý
@@ -308,7 +313,7 @@ public class PlayerController : MonoBehaviour
 
     void DeactivateShield()
     {
-        isShieldActive = true;
+        isShieldActive = false;
     }
 
     void AddHealth(int ToBeAddedHealth)
@@ -326,12 +331,22 @@ public class PlayerController : MonoBehaviour
     void ActivateBonus()
     {
         isShieldActive = true;
-        Invoke("eActivateBonus", 5f);
+        Invoke("DeActivateBonus", 5f);
     }
 
     void DeActivateBonus()
     {
-        isShieldActive = true;
+        isShieldActive = false;
     }
 
+    void ActivateMagnet()
+    {
+        isMagnetActive = true;
+        Invoke("DeActivateMagnet", 5f);
+    }
+
+    void DeActivateMagnet()
+    {
+        isMagnetActive = false;
+    }
 }
