@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     //sesler için
     [SerializeField] AudioClip bonusSound, CoinSound, DeathSound, MagnetCoinSound, ShieldSound, WinSound;
     [SerializeField] AudioSource PlayerSound;//oyuncu Sesleri için
+    //VfX ler için
+    [SerializeField] GameObject coinCollectedVFX, deathVFX, healthDeclineVFX, magnetVFX, wallBreakVFX,ShieldVFX;
 
     [Header("Settings")]
     [Tooltip("bu deðiþken oyuncunun hýzýný belirler")]
@@ -238,6 +240,9 @@ public class PlayerController : MonoBehaviour
             {
                 Destroy(other.gameObject);
                 isShieldActive = false;
+                GameObject vfx = Instantiate(wallBreakVFX, other.transform.position, Quaternion.identity);
+                Destroy(vfx, 1f);
+
             }
             else
             {
@@ -254,13 +259,30 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("çarpýþtýk");
             myAnim.SetBool("Death", true);
+            PlayerSound.PlayOneShot(DeathSound);
+            // GameObject vfx = Instantiate(deathVFX, transform.position, Quaternion.Euler(-90,0,0));
+            GameObject vfx = Instantiate(deathVFX, transform.position, Quaternion.identity);
+            Destroy(vfx, 1f);
+
             isDead = true;
         }
         else
         {
             Destroy(other.gameObject);
-        }
+            GameObject vfx = Instantiate(wallBreakVFX, other.transform.position, Quaternion.identity);
+            Destroy(vfx, 1f);
 
+            GameObject healthvfx = Instantiate(healthDeclineVFX, transform.position, Quaternion.identity,this.transform);
+            Destroy(healthvfx, 1f);
+
+
+
+        }
+      /*  if (score>300)
+        {
+            PlayerSound.PlayOneShot(WinSound);
+        }
+      */
     }
 
     private void OnTriggerEnter(Collider other)
@@ -329,6 +351,11 @@ public class PlayerController : MonoBehaviour
         }
 
 
+        // GameObject vfx= Instantiate(coinCollectedVFX, transform.position, Quaternion.identity);
+        //  GameObject vfx= Instantiate(coinCollectedVFX, transform.position, Quaternion.identity,this.transform);
+        GameObject vfx = Instantiate(coinCollectedVFX, transform.position+ new Vector3(0,1,0), Quaternion.identity, this.transform);
+        Destroy(vfx, 1f);
+
         if (is2XActive)
         {
             TobeAddedScore *= 2;
@@ -339,7 +366,10 @@ public class PlayerController : MonoBehaviour
     void ActivateShield()
     {
         isShieldActive = true;
-        Invoke("DeactivateShiel", 5f);
+        PlayerSound.PlayOneShot(ShieldSound);
+        GameObject vfx = Instantiate(ShieldVFX, transform.position , Quaternion.identity, this.transform);
+        Destroy(vfx, 5f);
+        Invoke("DeactivateShield", 5f);
     }
 
     void DeactivateShield()
@@ -376,6 +406,9 @@ public class PlayerController : MonoBehaviour
     void ActivateMagnet()
     {
         isMagnetActive = true;
+        GameObject vfx = Instantiate(magnetVFX, this.transform.position+ new Vector3(0,1,0), Quaternion.identity, this.transform);
+        Destroy(vfx, 5f);
+
         Invoke("DeActivateMagnet", 5f);
     }
 
