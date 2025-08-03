@@ -23,9 +23,23 @@ public class GameManager : MonoBehaviour
 
     void SpawnCollectable()
     {
-        GameObject collectableObject = Instantiate(collectables[Random.Range(0, collectables.Length)], Player.position + new Vector3(0, 0.5f, 50f), Quaternion.identity);
-     
+        /* GameObject collectableObject = Instantiate(collectables[Random.Range(0, collectables.Length)], Player.position + new Vector3(0, 0.5f, 50f), Quaternion.identity);
 
+
+         Invoke("SpawnCollectable", Random.Range(3f, 10f));*/
+
+        // x için 3 seçenek
+        float[] possibleXPositions = new float[] { -2f, 0f, 2f };
+        // Random index seç
+        float spawnX = possibleXPositions[Random.Range(0, possibleXPositions.Length)];
+
+        // Spawn pozisyonunu oluþtur
+        Vector3 spawnPos = new Vector3(spawnX, Player.position.y + 0.5f, Player.position.z + 50f);
+
+        // Collectable oluþtur
+        GameObject collectableObject = Instantiate(collectables[Random.Range(0, collectables.Length)], spawnPos, Quaternion.identity);
+
+        // Tekrar çaðýrma
         Invoke("SpawnCollectable", Random.Range(3f, 10f));
     }
     private void Update()
