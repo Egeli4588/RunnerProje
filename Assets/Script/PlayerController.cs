@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour
     [Header("Elements")]
     [SerializeField] Rigidbody rb;
     [SerializeField] public Animator myAnim;
+    //sesler için
+    [SerializeField] AudioClip bonusSound, CoinSound, DeathSound, MagnetCoinSound, ShieldSound, WinSound;
+    [SerializeField] AudioSource PlayerSound;//oyuncu Sesleri için
+
     [Header("Settings")]
     [Tooltip("bu deðiþken oyuncunun hýzýný belirler")]
     [SerializeField] float speed;
@@ -37,12 +41,15 @@ public class PlayerController : MonoBehaviour
 
     //þimdi boollarý tanýmlayalým.
 
-    bool is2XActive, isShieldActive, isMagnetActive;
+    public bool is2XActive, isShieldActive, isMagnetActive;
     //saðlýk ekleyelim.
     [SerializeField] int Health;
 
 
     float beforeSpeed;
+
+
+    bool isMove;
     void Start()
     {
         // transform.position = new Vector3(0, 0, 1);
@@ -94,17 +101,18 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
 
-        if (Input.GetKeyDown(KeyCode.A) && transform.position.x > -0.5f)
+        if (Input.GetKeyDown(KeyCode.A) && transform.position.x > -0.5f && !isMove)
         {
             // transform.Translate(new Vector3(-shift, 0, 0));
-            transform.DOMoveX(transform.position.x - shift, 0.5f).SetEase(Ease.Linear);
+            transform.DOMoveX(transform.position.x - shift, 0.5f).SetEase(Ease.Linear).OnComplete(isMoveToFalse);
 
-
+            isMove = true;
         }
-        else if (Input.GetKeyDown(KeyCode.D) && transform.position.x < 0.5f)
+        else if (Input.GetKeyDown(KeyCode.D) && transform.position.x < 0.5f && !isMove)
         {
             // transform.Translate(new Vector3(shift, 0, 0));
-            transform.DOMoveX(transform.position.x + shift, 0.5f).SetEase(Ease.Linear); ;
+            transform.DOMoveX(transform.position.x + shift, 0.5f).SetEase(Ease.Linear).OnComplete(isMoveToFalse);
+            isMove = true;
         }
 
 
@@ -188,16 +196,16 @@ public class PlayerController : MonoBehaviour
           else if (Input.GetKeyUp(KeyCode.A))
           {
               myAnim.SetBool("Run", false);
-          }
-          if (Input.GetKeyDown(KeyCode.Space)) 
-          {
-              myAnim.SetBool("Jump", true);
-          }
-          else if (Input.GetKeyUp(KeyCode.Space))
-          {
-              myAnim.SetBool("Jump", false);
-          }
-        */
+          }*/
+        /* if (Input.GetKeyDown(KeyCode.Space)) 
+         {
+             myAnim.SetBool("Jump", true);
+         }
+         else if (Input.GetKeyUp(KeyCode.Space))
+         {
+             myAnim.SetBool("Jump", false);
+         }
+       */
         //hareket 1.yol.
 
 
@@ -211,6 +219,13 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+    void isMoveToFalse()
+    {
+
+        isMove = false;
+
+    }
     private void OnCollisionEnter(Collision other)
     {
         Debug.Log("çarpýþtýk");
@@ -274,7 +289,7 @@ public class PlayerController : MonoBehaviour
 
                 case CollectablesEnum.Magnet:
                     ActivateMagnet();
-                    
+
                     break;
 
             }
@@ -298,6 +313,22 @@ public class PlayerController : MonoBehaviour
     }
     void AddScrore(int TobeAddedScore)
     {
+        if (isMagnetActive)
+        {
+            PlayerSound.clip = MagnetCoinSound;//magnetse
+           
+                PlayerSound.Play();
+            
+        }
+        else
+        {
+            PlayerSound.clip = CoinSound;//coinse
+            
+                PlayerSound.Play();
+            
+        }
+
+
         if (is2XActive)
         {
             TobeAddedScore *= 2;
@@ -330,13 +361,16 @@ public class PlayerController : MonoBehaviour
 
     void ActivateBonus()
     {
-        isShieldActive = true;
-        Invoke("DeActivateBonus", 5f);
+        is2XActive = true;
+        AudioSource.PlayClipAtPoint(bonusSound, transform.position);
+        Invoke("DeactivateBonus", 5f);
+     
+     
     }
 
     void DeActivateBonus()
     {
-        isShieldActive = false;
+        is2XActive = false;
     }
 
     void ActivateMagnet()

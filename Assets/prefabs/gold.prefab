@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4767803255266376531}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.31, y: 0.47000003, z: 2.74}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -147,3 +147,5 @@ MonoBehaviour:
   collectablesEnum: 0
   TobeAddedHealth: 0
   toBeAddedScore: 10
+  toBeAddedSpeed: 0
+  Player: {fileID: 0}

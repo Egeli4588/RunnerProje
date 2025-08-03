@@ -24,13 +24,9 @@ public class GameManager : MonoBehaviour
     void SpawnCollectable()
     {
         GameObject collectableObject = Instantiate(collectables[Random.Range(0, collectables.Length)], Player.position + new Vector3(0, 0.5f, 50f), Quaternion.identity);
-        Collectables collectable = collectableObject.GetComponent<Collectables>();
-        if (collectable.collectablesEnum == CollectablesEnum.Coin)
-        {
-            collectable.Player = Player.gameObject;
-        }
+     
 
-        Invoke("SpawnCollectable", Random.Range(10f, 20f));
+        Invoke("SpawnCollectable", Random.Range(3f, 10f));
     }
     private void Update()
     {
