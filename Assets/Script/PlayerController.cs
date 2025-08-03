@@ -52,11 +52,21 @@ public class PlayerController : MonoBehaviour
 
 
     bool isMove;
+    //zýplama için deneme1
+    bool isJumping = false;
+    float jumpTimer = 0f;
+    [SerializeField] float jumpHeight = 2f;
+    [SerializeField] float jumpDuration = 0.5f;
+    float initialY; // zýplama öncesi y konumu
+
+
     void Start()
     {
         // transform.position = new Vector3(0, 0, 1);
         isMiddle = true;
         // myAnim.SetBool("Run", true);
+
+        initialY = transform.position.y;
     }
 
     // Update is called once per frame
@@ -216,6 +226,37 @@ public class PlayerController : MonoBehaviour
 
         // hareket 2.yol.
         #endregion
+
+        // yeni zýplama için 
+        // Zýplama baþlat
+        if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
+        {
+            isJumping = true;
+            jumpTimer = 0f;
+            // myAnim.SetBool("Jump", true);
+            myAnim.SetTrigger("JumpTrigger");
+        }
+
+        // Zýplama iþlemi (yukarý-aþaðý hareket)
+        if (isJumping)
+        {
+            jumpTimer += Time.deltaTime;
+            float percent = jumpTimer / jumpDuration;
+            float yOffset = Mathf.Sin(percent * Mathf.PI) * jumpHeight;
+
+            Vector3 pos = transform.position;
+            pos.y = initialY + yOffset;
+            transform.position = pos;
+
+            if (jumpTimer >= jumpDuration)
+            {
+                // Zýplama tamamlandý
+                isJumping = false;
+                transform.position = new Vector3(transform.position.x, initialY, transform.position.z);
+                myAnim.SetBool("Jump", false);
+            }
+        }
+
 
 
 
