@@ -434,7 +434,7 @@ public class PlayerController : MonoBehaviour
     {
         is2XActive = true;
         AudioSource.PlayClipAtPoint(bonusSound, transform.position);
-        Invoke("DeactivateBonus", 5f);
+        Invoke("DeActivateBonus", 5f);
      
      
     }
